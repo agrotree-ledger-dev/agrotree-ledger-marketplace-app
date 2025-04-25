@@ -74,11 +74,9 @@ const BuyNftButton: React.FC<Props> = ({ item, marketItem, full }) => {
         };
       }
       const wallet = primaryWallet.getWalletClient<SolanaChain>();
-      console.log("Wallet", wallet);
       const signedTx = await wallet.signTransaction(
         transformToVersionedTransaction(transaction)
       );
-      console.log("Signed tx", signedTx);
       const tx = await publicClient.sendTransaction(signedTx);
       if (tx && merkleTree) {
         await syncAfterBuyTreeNftAction(

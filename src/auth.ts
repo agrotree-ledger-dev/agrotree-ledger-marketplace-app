@@ -104,4 +104,36 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
+  callbacks: {
+    session: async ({ session, token }) => {
+      // console.log({ session, token });
+      // console.log({ session, user, token });
+      if (token) {
+        session.user.name = token.name || "";
+        session.user.email = token.email || "nomail@gmail.com";
+        session.user.id = token.id as string;
+        session.user.publickey = token.sub || null;
+        session.user.image = `https://ui-avatars.com/api/?name=${token.sub}`;
+      }
+      // console.log({ session });
+      return session;
+    },
+    jwt: async ({ token, user, account, profile }) => {
+      // Persist the OAuth access_token and or the user id to the token right after signin
+      if (account) {
+        token.accessToken = account.access_token;
+        token.id = token.sub || profile?.sub;
+      }
+      if (user) {
+        token.user = {
+          _id: user.id,
+          name: user.name,
+          email: user.email,
+          publicKey: user.id,
+        };
+      }
+
+      return token;
+    },
+  },
 });

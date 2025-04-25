@@ -14,7 +14,6 @@ import { redis } from "@/lib/redis";
 import { CompressedListingType } from "@/types/Contract.type";
 import { PublicKey } from "@solana/web3.js";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 export async function unlistTreeNftAction(assetId: string): Promise<{
   transaction: string | null;
@@ -26,7 +25,13 @@ export async function unlistTreeNftAction(assetId: string): Promise<{
   const session = await auth();
 
   if (!session || !session.user.id) {
-    redirect("/");
+    return {
+      success: false,
+      transaction: null,
+      data: {
+        merkleTree: null,
+      },
+    };
   }
 
   const creator = session.user.id.toString();
@@ -136,9 +141,16 @@ export async function buyTreeNftAction(
   };
 }> {
   const session = await auth();
+  console.log("session", session);
 
   if (!session || !session.user.id) {
-    redirect("/");
+    return {
+      success: false,
+      transaction: null,
+      data: {
+        merkleTree: null,
+      },
+    };
   }
 
   const creator = session.user.id.toString();
@@ -180,7 +192,13 @@ export async function sellTreeNftAction(
   const session = await auth();
 
   if (!session || !session.user.id) {
-    redirect("/");
+    return {
+      success: false,
+      transaction: null,
+      data: {
+        merkleTree: null,
+      },
+    };
   }
 
   const creator = session.user.id.toString();
@@ -213,7 +231,7 @@ export async function syncAfterSellTreeNftAction(
   const session = await auth();
 
   if (!session || !session.user.id) {
-    redirect("/");
+    return false;
   }
 
   const creator = session.user.id.toString();
@@ -252,7 +270,7 @@ export async function syncAfterUnlistTreeNftAction(
   const session = await auth();
 
   if (!session || !session.user.id) {
-    redirect("/");
+    return false;
   }
 
   const creator = session.user.id.toString();
@@ -296,7 +314,7 @@ export async function syncAfterBuyTreeNftAction(
   const session = await auth();
 
   if (!session || !session.user.id) {
-    redirect("/");
+    return false;
   }
 
   const creator = session.user.id.toString();
