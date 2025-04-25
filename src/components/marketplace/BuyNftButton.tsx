@@ -146,7 +146,7 @@ const BuyNftButton: React.FC<Props> = ({ item, marketItem, full }) => {
             </div>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)}>
-                <div className="flex gap-5">
+                <div className="flex flex-col justify-between gap-5">
                   <Button
                     variant={"secondary"}
                     disabled={isPending}
