@@ -64,7 +64,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!credentials) {
           return null;
         }
-        console.log("credentials", credentials);
         const { signature, publicKey, csrfToken } = credentials;
 
         const message = `By signing this message, you are logging into ${process.env.NEXT_PUBLIC_APP_NAME}\n${csrfToken}`;

@@ -46,28 +46,35 @@ const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
     if (!primaryWallet) return;
     setLoading(true);
 
-    const walletClient = primaryWallet.getWalletClient<SolanaChain>();
-    const crsf = await getCsrfToken();
-    if (!crsf) {
-      console.error("Failed to get CSRF token");
-      setLoading(false);
-      return;
-    }
-    const message = `By signing this message, you are logging into ${process.env.NEXT_PUBLIC_APP_NAME}\n${crsf}`;
-    const nonce = new TextEncoder().encode(message);
-    const { signature } = await walletClient.signMessage(nonce);
-    const serializedSignature = bs58.encode(signature);
-    const response = await signIn("credentials", {
-      signature: serializedSignature,
-      publicKey: address,
-      redirect: false,
-    });
+    try {
+      const walletClient = primaryWallet.getWalletClient<SolanaChain>();
+      const crsf = await getCsrfToken();
+      if (!crsf) {
+        console.error("Failed to get CSRF token");
+        setLoading(false);
+        return;
+      }
+      const message = `By signing this message, you are logging into ${process.env.NEXT_PUBLIC_APP_NAME}\n${crsf}`;
+      const nonce = new TextEncoder().encode(message);
+      const { signature } = await walletClient.signMessage(nonce);
+      const serializedSignature = bs58.encode(signature);
+      const response = await signIn("credentials", {
+        signature: serializedSignature,
+        publicKey: address,
+        redirect: false,
+      });
 
-    if (response?.ok) {
-      console.log("Login successful");
-      router.refresh();
+      if (response?.ok) {
+        console.log("Login successful");
+        router.refresh();
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error("Login error", error);
+      setLoading(false);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, [primaryWallet, address, router]);
 
   const logout = useCallback(async () => {
@@ -80,20 +87,23 @@ const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
   }, [isConnected, status]);
 
   useEffect(() => {
+    console.log("isConnected", isConnected);
+    console.log("address", address);
+    console.log("status", status);
     if (isConnected && status === "unauthenticated") {
       console.log("Wallet Connected. Logging in");
       login();
     }
-  }, [isConnected, status, login]);
+  }, [address, isConnected, login, status]);
 
   useEffect(() => {
     // if (isDisconnected && status === "authenticated") {
-    // console.log(address, session?.user.id, address !== session?.user.id);
+    console.log(isDisconnected, address, session?.user.id);
     if (session?.user.id && address !== session?.user.id) {
       console.log("Wallet Disconnected. Logging out");
       logout();
     }
-  }, [isDisconnected, status, address, session?.user.id, logout]);
+  }, [isDisconnected, address, session?.user.id, logout]);
 
   return (
     <AuthContext.Provider

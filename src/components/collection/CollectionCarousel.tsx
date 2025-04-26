@@ -34,6 +34,10 @@ const CollectionCarousel: React.FC<Props> = ({ collections }) => {
                   src={item.image}
                   alt={item.name}
                   fill
+                  style={{ objectFit: "cover" }}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  priority
+                  quality={80}
                   className="z-0 object-fill"
                 />
               ) : null}

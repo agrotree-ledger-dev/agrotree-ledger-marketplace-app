@@ -13,7 +13,7 @@ const Footer = () => {
             alt={appConfig.appTitle}
             width={188}
             height={56}
-            className="w-48 h-14 object-cover aspect-auto"
+            className="w-auto h-14 object-cover aspect-auto"
           />
         </div>
         <div>
