@@ -368,3 +368,33 @@ export function convertHeliusApiAssetToTreeNftType(
     },
   };
 }
+
+export function getHeliusApiKey() {
+  const keysbank = [
+    process.env.HELIUS_API_KEY_1,
+    process.env.HELIUS_API_KEY_2,
+    process.env.HELIUS_API_KEY_3,
+  ];
+
+  const randomIndex = getRandomInt(0, keysbank.length - 1);
+  const selectedKey = keysbank[randomIndex];
+  if (!selectedKey) {
+    throw new Error("No Helius API key found");
+  }
+  return selectedKey;
+}
+
+export function getShyftApiKey() {
+  const keysbank = [
+    process.env.SHYFT_API_KEY_1,
+    process.env.SHYFT_API_KEY_2,
+    process.env.SHYFT_API_KEY_3,
+  ];
+
+  const randomIndex = getRandomInt(0, keysbank.length - 1);
+  const selectedKey = keysbank[randomIndex];
+  if (!selectedKey) {
+    throw new Error("No Helius API key found");
+  }
+  return selectedKey;
+}

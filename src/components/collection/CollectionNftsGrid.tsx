@@ -5,8 +5,8 @@ import React, { useState } from "react";
 import EmptyList from "../commons/EmptyList";
 import TreeNftGrid from "../profile/TreeNftGrid";
 import CardSkeleton from "../commons/CardSkeleton";
-import { getAssetListFromShyft } from "@/_actions/shyft.action";
 import { Button } from "../ui/button";
+import { getAssetListFromHelius } from "@/_actions/helius.action";
 type Props = {
   collection: string;
   addresses: (string | null)[];
@@ -15,7 +15,7 @@ const CollectionNftsGrid: React.FC<Props> = ({ collection, addresses }) => {
   const [page, setPage] = useState(1);
   const { data, isLoading } = useQuery({
     queryKey: ["get-collection-nfts", collection],
-    queryFn: async () => getAssetListFromShyft(addresses, page),
+    queryFn: async () => getAssetListFromHelius(addresses, page),
   });
   return (
     <div>

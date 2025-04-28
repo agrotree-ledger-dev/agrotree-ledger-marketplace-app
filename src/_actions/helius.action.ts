@@ -1,4 +1,5 @@
 "use server";
+import { getAgroTreeManagerConfigAddress } from "@/lib/contracts/marketplace.contract";
 import { convertHeliusApiAssetToTreeNftType } from "@/lib/utils";
 import { PaginationShyftType } from "@/types/Pagination.type";
 import { TreeNftType } from "@/types/TreeNft.type";
@@ -13,10 +14,13 @@ export async function getAssetByOwnerFromHelius(
   page: number = 1,
   size: number = 10
 ): Promise<PaginationShyftType<TreeNftType>> {
-  const response = await helius.rpc.getAssetsByOwner({
+  const [agroTreeManagerConfigAddress] = getAgroTreeManagerConfigAddress();
+  const response = await helius.rpc.searchAssets({
     ownerAddress: owner,
     page,
     limit: size,
+    tokenType: "nonFungible",
+    creatorAddress: agroTreeManagerConfigAddress.toString(),
     sortBy: {
       sortBy: AssetSortBy.Id,
       sortDirection: AssetSortDirection.Asc,

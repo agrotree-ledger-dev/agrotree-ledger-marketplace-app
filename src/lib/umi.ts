@@ -13,7 +13,7 @@ import {
 } from "@metaplex-foundation/digital-asset-standard-api";
 import { mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata";
 import { mplBubblegum } from "@metaplex-foundation/mpl-bubblegum";
-import { getRandomInt } from "./utils";
+import { getHeliusApiKey } from "./utils";
 
 // Monkey patch the Connection prototype
 Connection.prototype.getRecentBlockhash = async function (commitment) {
@@ -40,8 +40,10 @@ Connection.prototype.getRecentBlockhash = async function (commitment) {
 };
 
 export async function getUmiServer() {
-  const rpc = process.env[`DASAPI_CLUSTER_URL_${getRandomInt(1, 3)}`] as string;
-  const connection = new Connection(rpc, "confirmed");
+  const endpointRpc = `${
+    process.env.NEXT_PUBLIC_HELIUS_CLUSTER_URL
+  }/?api-key=${getHeliusApiKey()}` as string;
+  const connection = new Connection(endpointRpc, "confirmed");
   const umiServer = createUmi(connection.rpcEndpoint, {
     commitment: "confirmed",
   })
