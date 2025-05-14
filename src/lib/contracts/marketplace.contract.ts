@@ -18,7 +18,7 @@ import appConfig from "../config";
 
 export function getMarketplaceProgram() {
   const connection = getProgramConnection();
-
+  console.log("connection", connection);
   const program = new Program(idl as AgrotreeMarketplace, { connection });
 
   return { program, connection };

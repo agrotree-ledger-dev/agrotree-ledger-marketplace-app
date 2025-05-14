@@ -54,7 +54,7 @@ export async function getAssetFromHelius(
     id: address,
   });
 
-  if (respone.id) {
+  if (respone && respone.id) {
     return convertHeliusApiAssetToTreeNftType(respone);
   }
   return null;
